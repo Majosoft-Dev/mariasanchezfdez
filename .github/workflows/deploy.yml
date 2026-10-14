@@ -1,5 +1,5 @@
 # Publica la web en mariasanchezfdez.es (servidor de apartamentos, 31.70.154.16)
-# cada vez que se sube algo a la rama produccion. main es la rama de trabajo.
+# en cada push a main (o a produccion).
 #
 # La clave DEPLOY_SSH_KEY está restringida en el servidor: solo puede ejecutar
 # /usr/local/bin/mariasanchezfdez-deploy.sh, da igual el comando que se le pida.
@@ -7,7 +7,7 @@ name: Publicar en mariasanchezfdez.es
 
 on:
   push:
-    branches: [produccion]
+    branches: [main, produccion]
   workflow_dispatch:
 
 concurrency:
@@ -27,7 +27,7 @@ jobs:
           echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
       - name: Actualizar la web en el servidor
-        run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "root@${{ secrets.DEPLOY_HOST }}" deploy
+        run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes "root@${{ secrets.DEPLOY_HOST }}" "deploy ${{ github.sha }}"
 
       - name: Comprobar que la web responde
         run: |
