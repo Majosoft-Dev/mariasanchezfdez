@@ -81,9 +81,11 @@ function init() {
       const target = $(a.getAttribute('href'));
       if (!target) return;
       e.preventDefault();
-      if (lenis) lenis.scrollTo(target, { duration: 1.6 });
+      // La portada va fijada (pin): su posición medida cae al final del pin, no arriba del todo
+      const top = a.getAttribute('href') === '#inicio';
+      if (lenis) lenis.scrollTo(top ? 0 : target, { duration: 1.6, force: true });
       else target.scrollIntoView({ behavior: 'smooth' });
-      if (a.getAttribute('href') !== '#inicio') {
+      if (!top) {
         target.setAttribute('tabindex', '-1');
         target.focus({ preventScroll: true });
       }
